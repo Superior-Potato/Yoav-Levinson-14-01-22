@@ -1,23 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import { Favorites } from './components/Favorites';
+import { Toolbar } from './components/Toolbar';
+import { useState } from 'react';
+import Weather from './components/weather/Weather';
+import { getItemFromStorage } from './storage';
 
 function App() {
+
+  const [isFavorites,setIsFavorites] = useState(false)
+  const [fav,setFav] = useState(JSON.parse(getItemFromStorage('favorites')))
   return (
     <div className="App">
+
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Toolbar onSelectionChanged = {(selection) => {selection === 'fav' ? setIsFavorites(true) : setIsFavorites(false)}}/>
+        {isFavorites ? <Favorites setFav = {setFav} fav = {fav}/> : <Weather setFav = {setFav}/>}
+     </header>
+
+
     </div>
   );
 }
