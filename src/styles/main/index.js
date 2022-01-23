@@ -23,7 +23,7 @@ export const toolbar_item = {
 }
 export const suggestionList = (width) => ({
     marginBottom: '0px',
-    width: width,
+    width: width ? width : '100px',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: '0px',

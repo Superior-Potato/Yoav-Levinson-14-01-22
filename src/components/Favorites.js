@@ -5,12 +5,18 @@ import { card, info_holder, info_item, table_data,table_header,table_header_data
 import validators from "../utils/validators"
 
 import $ from 'jquery'
-export const Favorites = (props) => {
-    
+import { useDispatch, useSelector } from "react-redux"
+import { removeFromFavorites } from "../storage/redux"
+import React from 'react'
 
+export const Favorites = (props) => {
+ 
+
+    const dispatch = useDispatch()
+    const favorites = useSelector(state => state.favorites.favList)
     const deleteFromFav = (key) => {
-        deleteCityFromFavorites(key)
-        props.setFav(JSON.parse(getItemFromStorage('favorites')))
+        dispatch(removeFromFavorites(key)) // redux
+        deleteCityFromFavorites(key) // local storage
     }
     const getFavoriteElements = () => {
         const getWeatherForItem = (key) => {
@@ -22,15 +28,15 @@ export const Favorites = (props) => {
             })
         }
         const getAll = (completion) => {
-            if(validators.validate(props.fav)) {
+            if(validators.validate(favorites)) {
                
-                const elements = props.fav.map(fav => <tr key = {fav.Key + fav.LocalizedName} style = {{...table_row,alignItems:'center'}}>
+                const elements = favorites.map(fav => <tr key = {fav.Key + fav.LocalizedName} style = {{...table_row,alignItems:'center'}}>
                     <td style = {table_data}>{fav.Key}</td>
                     <td style = {table_data}>{fav.LocalizedName}</td>
                     <td style=  {table_data} id ={fav.Key}></td>
                     <td style = {table_data}><img onClick = {() => deleteFromFav(fav.Key)} style = {{width:'30px',height:'30px',cursor:'pointer'}} src = {removeIcon}/></td>
                 </tr>)
-                  completion(props.fav)
+                  completion(favorites)
                 return elements
            }else {
                return <tr>No Favorites</tr>
@@ -43,7 +49,7 @@ export const Favorites = (props) => {
                     <td style={table_header_data}>Key</td>
                     <td style={table_header_data}>Name</td>
                     <td style={table_header_data}>Current W</td>
-                    {props.fav.length >0 &&<td style = {table_header_data}></td>}
+                    {favorites.length >0 &&<td style = {table_header_data}></td>}
                 </tr>
             </thead>
 

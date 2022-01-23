@@ -8,6 +8,8 @@ import fav from '../../assets/images/favorites.png'
 import { getDayString } from "../../utils/date"
 import { getItemFromStorage, saveAndMerge, saveItemToStorage } from "../../storage"
 import { suggestionList, suggestionListItem } from "../../styles/main"
+import { useDispatch, useSelector } from "react-redux"
+import { setFavorites } from "../../storage/redux"
 const Weather = (props) => {
 
     // Componenet State
@@ -17,6 +19,7 @@ const Weather = (props) => {
     const [cityData, setCityData] = useState(null)
     const [suggestions, setSuggestions] = useState([])
 
+    const dispatch = useDispatch()
     // JQuery customization
     useEffect(() => {
         $('tr:nth-child(2n)').css({ 'backgroundColor': 'lightgray' })
@@ -27,13 +30,12 @@ const Weather = (props) => {
             e.currentTarget.style.backgroundColor = 'whitesmoke'
             e.currentTarget.style.color = 'black'
         })
-    })
+    },[$('tr:nth-child(2n)')])
 
     const toggleItemFavorite = () => {
-        saveAndMerge('favorites', cityData)
-        props.setFav(JSON.parse(getItemFromStorage('favorites')))
+        const merge = saveAndMerge('favorites', cityData) // local storage
+        dispatch(setFavorites(merge)) // redux
     }
-
 
     /**
      * autocompletes input city search
@@ -55,6 +57,7 @@ const Weather = (props) => {
                 })
         }
     }
+
     /**
      * chooses a suggestion from suggestion list
      * @param {Event} e 

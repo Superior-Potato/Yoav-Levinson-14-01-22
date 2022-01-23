@@ -9,7 +9,7 @@ export const saveItemToStorage = (itemName,item) => {
     localStorage.setItem(itemName,JSON.stringify(item))
 }
 
-// merges new data with existing data with no duplicates
+// merges and returns new data with existing data with no duplicates
 export const saveAndMerge = (itemName,newData) => {
     const existingData = JSON.parse(getItemFromStorage(itemName))
 
@@ -24,9 +24,13 @@ export const saveAndMerge = (itemName,newData) => {
             }
             hash[item.Key] = true
         }
-        localStorage.setItem(itemName,JSON.stringify(merge))
+        const jsonString = JSON.stringify(merge)
+        localStorage.setItem(itemName,jsonString)
+        return merge
     }else {
-        localStorage.setItem(itemName,JSON.stringify([newData]))
+        const jsonString = JSON.stringify([newData])
+        localStorage.setItem(itemName,jsonString)
+        return [newData]
     }
 }
 
